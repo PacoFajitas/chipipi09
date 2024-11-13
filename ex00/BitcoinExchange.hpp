@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:41:46 by tfiguero          #+#    #+#             */
-/*   Updated: 2024/11/13 18:21:53 by tfiguero         ###   ########.fr       */
+/*   Updated: 2024/11/13 18:39:16 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <iostream>
 # include <fstream>
 # include <exception>
+# include <vector>
 
 # define MAX_VAL 1000
 # define MIN_VAL 0
