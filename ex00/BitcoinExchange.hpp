@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:41:46 by tfiguero          #+#    #+#             */
-/*   Updated: 2024/11/13 18:39:16 by tfiguero         ###   ########.fr       */
+/*   Updated: 2024/11/14 23:08:27 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <fstream>
 # include <exception>
 # include <vector>
+# include <cstdlib>
+# include <utility>
+# include <algorithm>
 
 # define MAX_VAL 1000
 # define MIN_VAL 0
@@ -26,6 +29,8 @@
 class BitcoinExchange
 {
 	private:
+		bool checkValidDate(std::vector<std::string> date);
+		void saveCsv();
 		class BadValueException : public std::exception
 		{
 			public:
@@ -45,11 +50,14 @@ class BitcoinExchange
 		BitcoinExchange(const BitcoinExchange& old);
 		std::map<tm, float> data;
 		BitcoinExchange& operator=(const BitcoinExchange& old);
-		void	calculateValues(tm date, float val);
+		float	calculateValues(tm date, float val);
 		void	parseData(std::string input);
+		void	outputData(float value, tm date, float oldval);
 	public:
 		BitcoinExchange();
 		~BitcoinExchange();
 		void	btc(char* file);
 };
+bool operator<=(const tm& lhs, const tm& rhs);
+bool operator<(const tm& lhs, const tm& rhs);
 #endif

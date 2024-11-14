@@ -6,7 +6,7 @@
 #    By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/18 22:03:53 by tfiguero          #+#    #+#              #
-#    Updated: 2024/09/18 22:05:36 by tfiguero         ###   ########.fr        #
+#    Updated: 2024/11/14 22:42:29 by tfiguero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@
 NAME = btc
 
 SRC_FILES = main.cpp\
+			BitcoinExchange.cpp
 			
 OBJ_DIR = objs/
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
