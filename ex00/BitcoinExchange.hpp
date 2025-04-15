@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:41:46 by tfiguero          #+#    #+#             */
-/*   Updated: 2024/11/14 23:08:27 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/04/15 20:40:28 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <utility>
 # include <algorithm>
 
-# define MAX_VAL 1000
+# define MAX_VAL 10000
 # define MIN_VAL 0
 
 class BitcoinExchange

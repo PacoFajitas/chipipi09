@@ -85,6 +85,9 @@ void BitcoinExchange::saveCsv()
 		throw std::runtime_error("Error opening exchange rates base.");
 	if (!std::getline(base, date)) //skipping the first line with the header
 		throw std::invalid_argument("Data base is empty.");
+	if ( date.find_first_not_of(" \t\r") == std::string::npos)
+		throw std::invalid_argument("Data base is empty.");
+	
 	while (std::getline(base, date, ',') && std::getline(base, rate))
 	{
 		initDate(finalDate);
@@ -149,6 +152,7 @@ void BitcoinExchange::parseData(std::string input)
 		{
 			if (!isdigit(splitDate[i][j]))
 			{
+				
 				throw BadFormatException(date);
 			}
 		}
@@ -157,7 +161,10 @@ void BitcoinExchange::parseData(std::string input)
 	
 	finalDate.tm_year = atoi(splitDate[0].c_str());
 	if(!checkValidDayMonth(atoi(splitDate[2].c_str()) ,atoi(splitDate[1].c_str())))
+	{
+		std::cout << "holi" << std::endl;
 		throw BadFormatException(date);
+	}
 	finalDate.tm_mon = atoi(splitDate[1].c_str());
 	finalDate.tm_mday = atoi(splitDate[2].c_str());
 	value = trimStr(value);
@@ -190,9 +197,9 @@ void BitcoinExchange::btc(char *file)
 	std::string linia;
 
 	if(!in.is_open())
-		throw std::runtime_error("Error: could not open file.");
+		throw std::runtime_error("Could not open file.");
 	std::getline(in, linia);
-	if(linia.empty())
+	if(linia.empty() || linia.find_first_not_of(" \t\r") == std::string::npos)
 		throw std::runtime_error("File is empty.");
 	std::transform(linia.begin(), linia.end(), linia.begin(), ::tolower);
 	linia = trimStr(linia);
@@ -210,8 +217,6 @@ void BitcoinExchange::btc(char *file)
 		}
 		
 	}
-	
-	
 }
 
 const char *BitcoinExchange::BadValueException::what() const throw()
@@ -221,7 +226,8 @@ const char *BitcoinExchange::BadValueException::what() const throw()
 
 // Constructor sin argumentos
 BitcoinExchange::BadFormatException::BadFormatException()
-    : mensaje("bad input") {}
+    : mensaje("bad input") 
+	{}
 
 // Constructor con un argumento para la fecha
 BitcoinExchange::BadFormatException::BadFormatException(const std::string& date)
