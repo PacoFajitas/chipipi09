@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 16:41:46 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/04/15 20:40:28 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/04/16 21:16:50 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <iostream>
 # include <fstream>
 # include <exception>
-# include <vector>
 # include <cstdlib>
 # include <utility>
 # include <algorithm>
@@ -29,7 +28,6 @@
 class BitcoinExchange
 {
 	private:
-		bool checkValidDate(std::vector<std::string> date);
 		void saveCsv();
 		class BadValueException : public std::exception
 		{
@@ -48,6 +46,7 @@ class BitcoinExchange
                 const char* what() const throw();
         };
 		BitcoinExchange(const BitcoinExchange& old);
+		void splitDate(const std::string& str, const std::string& delimiter, tm &finalDate);
 		std::map<tm, float> data;
 		BitcoinExchange& operator=(const BitcoinExchange& old);
 		float	calculateValues(tm date, float val);

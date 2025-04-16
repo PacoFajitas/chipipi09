@@ -37,7 +37,7 @@ static void initDate(tm& date)
 	date.tm_year = 0;
 	date.tm_zone = 0;
 }
-//returns true if valid, false if invalid
+// //returns true if valid, false if invalid
 static bool checkValidDayMonth(int day, int month)
 {
 
@@ -48,24 +48,32 @@ static bool checkValidDayMonth(int day, int month)
 	return true;
 }
 
-static std::vector<std::string> splitString(const std::string& str, const std::string& delimiter) {
-    std::vector<std::string> tokens;
-    size_t start = 0;
-    size_t end = str.find(delimiter);
-    while (end != std::string::npos) {
-        std::string token = str.substr(start, end - start);
-        if (!token.empty()) {  // Ignora los tokens vacíos
-            tokens.push_back(token);
-        }
-        start = end + delimiter.length();
-        end = str.find(delimiter, start);
-    }
-    // Agregar la última parte si no está vacía
-    std::string token = str.substr(start);
-    if (!token.empty()) {
-        tokens.push_back(token);
-    }
-    return tokens;
+void BitcoinExchange::splitDate(const std::string& str, const std::string& delimiter, tm &finalDate) {
+	int i=0;
+	size_t start = 0;
+	size_t end = str.find(delimiter);
+	while (end != std::string::npos) {
+		std::string token = str.substr(start, end - start);
+		start = end + delimiter.length();
+		end = str.find(delimiter, start);
+		for (size_t j = 0; j < token.length(); j++)
+		{
+			if (!isdigit(token[i]))
+			{
+				
+				throw BadFormatException(str);
+			}
+		}
+		
+		if (!token.empty()) {
+			if(i==0)
+				finalDate.tm_year = atoi(token.c_str());
+			else if(i==1)
+				finalDate.tm_mon = atoi(token.c_str());
+			i++;
+		}
+		finalDate.tm_mday = atoi(str.substr(start).c_str());
+	}
 }
 
 BitcoinExchange::BitcoinExchange()
@@ -78,7 +86,6 @@ void BitcoinExchange::saveCsv()
 	std::string					date;
 	std::string					rate;
 	std::ifstream				base("data.csv");
-	std::vector<std::string> 	dates;
 	tm							finalDate;
 
 	if (!base.is_open())
@@ -91,10 +98,7 @@ void BitcoinExchange::saveCsv()
 	while (std::getline(base, date, ',') && std::getline(base, rate))
 	{
 		initDate(finalDate);
-		dates = splitString(date, "-");
-		finalDate.tm_year = atoi(dates[0].c_str());
-		finalDate.tm_mon = atoi(dates[1].c_str());
-		finalDate.tm_mday = atoi(dates[2].c_str());
+		splitDate(date, "-", finalDate);
 		data.insert(std::make_pair(finalDate,strtof(rate.c_str(), NULL)));
 	}
 	base.close();
@@ -130,7 +134,6 @@ void BitcoinExchange::parseData(std::string input)
 	std::string date;
 	tm finalDate;
 	float val;
-	std::vector<std::string> splitDate;
 	std::string value;
 	initDate(finalDate);
 	if(input.find('|') == std::string::npos || input.find('|') + 1 == input.length())
@@ -139,34 +142,13 @@ void BitcoinExchange::parseData(std::string input)
 	value = input.substr(input.find('|') + 1);
 	if(date.find_first_not_of(" \t\r") == std::string::npos || value.find_first_not_of(" \t\r") == std::string::npos)
 		throw BadFormatException();
-	splitDate = splitString(date, "-");
-	if (splitDate.size()!= 3)
-		throw BadFormatException();
-	for (size_t i = 0; i < splitDate.size(); i++)
+	splitDate(date, "-", finalDate);
+	if (finalDate.tm_mday == 0 ||finalDate.tm_mon == 0 || finalDate.tm_year == 0)
+		throw BadFormatException();	
+	if(!checkValidDayMonth(finalDate.tm_mday ,finalDate.tm_mon))
 	{
-		splitDate[i] = trimStr(splitDate[i]);
-	}
-	for (size_t i = 0; i < splitDate.size(); i++)
-	{
-		for (size_t j = 0; j < splitDate[i].length(); j++)
-		{
-			if (!isdigit(splitDate[i][j]))
-			{
-				
-				throw BadFormatException(date);
-			}
-		}
-		
-	}
-	
-	finalDate.tm_year = atoi(splitDate[0].c_str());
-	if(!checkValidDayMonth(atoi(splitDate[2].c_str()) ,atoi(splitDate[1].c_str())))
-	{
-		std::cout << "holi" << std::endl;
 		throw BadFormatException(date);
 	}
-	finalDate.tm_mon = atoi(splitDate[1].c_str());
-	finalDate.tm_mday = atoi(splitDate[2].c_str());
 	value = trimStr(value);
 	for (size_t i = 0; i < value.length(); i++)
 	{
@@ -221,7 +203,7 @@ void BitcoinExchange::btc(char *file)
 
 const char *BitcoinExchange::BadValueException::what() const throw()
 {
-	return "not a positive number";
+	return "Not a valid value";
 }
 
 // Constructor sin argumentos
