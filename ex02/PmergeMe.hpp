@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:48:08 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/04/16 20:07:04 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/04/21 01:48:10 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,25 @@
 
 # include <algorithm>
 # include <iostream>
-# include <random>
 # include <vector>
 
 class PmergeMe
 {
 private:
-	std::vector<std::vector<int>> data;
+	std::vector<std::vector<int> > data;
+	int	depth;
 public:
+	class InvalidInputException : public std::exception
+		{
+			public:
+				const char* what() const throw();
+		};
 	PmergeMe();
+	PmergeMe(int argc, char**argv);
 	PmergeMe(PmergeMe &old);
 	PmergeMe& operator=(PmergeMe& old);
 	~PmergeMe();
+	void	printVectorBase();
 };
 
 

@@ -6,15 +6,15 @@
 #    By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/18 22:03:53 by tfiguero          #+#    #+#              #
-#    Updated: 2024/09/29 18:53:08 by tfiguero         ###   ########.fr        #
+#    Updated: 2025/04/20 23:28:50 by tfiguero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-NAME = RPN
+NAME = PmergeMe
 
 SRC_FILES = main.cpp\
-			RPN.cpp\
+			PmergeMe.cpp\
 			
 OBJ_DIR = objs/
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
