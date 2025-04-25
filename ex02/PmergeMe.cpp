@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:49:38 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/04/21 01:54:00 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/04/25 22:36:23 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static int ft_getdepth(int vals, int ret)
 }
 PmergeMe::PmergeMe(int argc, char **argv)
 {
-	std::vector<int> base;
 	if (argc <= 1)
 		throw PmergeMe::InvalidInputException();
 	for (int i = 1; i < argc; i++)
@@ -39,15 +38,13 @@ PmergeMe::PmergeMe(int argc, char **argv)
 			}
 			j++;
 		}
-		base.push_back(std::atoi(argv[i]));
-		this->data.push_back(base);
-		base.clear();
+		mainV.push_back(std::atoi(argv[i]));
 	}
-	printVectorBase();
-	this->depth = ft_getdepth(data.size(), 0);
-	std::cout << this->depth << std::endl;
+	this->depth = ft_getdepth(mainV.size(), 0);
+	makePairs(this->depth, 1);
 	
 }
+
 
 PmergeMe::PmergeMe(PmergeMe & old)
 {
@@ -63,20 +60,91 @@ PmergeMe & PmergeMe::operator=(PmergeMe & old)
 PmergeMe::~PmergeMe()
 {
 }
-
-void PmergeMe::printVectorBase()
+static void printVector(std::vector<int> vector)
 {
-	for (size_t i = 0; i < this->data.size(); i++)
+	std::vector<int>::iterator it = vector.begin();
+	std::cout << "The values of this vector are: ";
+	while(it!= vector.end())
 	{
-		std::cout << "En el vector de la posicion :" << i << " Estan los numeros :" ;
-		for (size_t j = 0; j < this->data[i].size(); j++)
-		{
-			std::cout << this->data[i][j] << "  ";
-		}
-		std::cout << std::endl;
-		
+		std::cout << *it << " ";
+		++it;
 	}
-	
+	std::cout << std::endl;
+}
+static std::vector<int> excludeUnpaired(std::vector<int> base, int times)
+{
+	std::vector<int> ret;
+	int	pairs = pow(2, times);
+	int excluded = base.size() %  pairs;
+	ret = base;
+	while (excluded > 0)
+	{
+		ret.pop_back();
+		excluded--;
+	}
+	return ret;
+}
+void PmergeMe::makePairs(int depth, size_t times)
+{
+	if (depth==0)
+		return ;	
+	std::vector<int> tmp;
+	tmp = excludeUnpaired(this->mainV, times);
+	size_t pairs = pow(2, times);
+	size_t lastPair = pairs/2;
+	size_t i = lastPair-1;
+	std::cout << "Pairs is: " << pairs << std::endl;
+	while(i < (tmp.size() - lastPair))
+	{
+			if(tmp.at(i) <= tmp.at(i + lastPair))
+			{
+				i+=pairs;
+				continue;
+			}
+			for (int j = lastPair-1; j >= 0; j--)
+			{
+				int	&firstNumber = tmp.at(i - j);
+				int	&secondNumber = tmp.at(i - j +lastPair);
+				std::swap(firstNumber, secondNumber);
+			}
+		
+		i += pairs;
+	}
+	int excluded = this->mainV.size() %  pairs;
+	while (excluded > 0)
+	{
+		int it;
+		std::vector<int>::iterator it2;
+		
+		it=*(mainV.end()-excluded);
+		it2 = tmp.end();
+		tmp.insert(it2, it);
+		excluded--;
+	}
+	this->mainV = tmp;
+	std::cout << "Vector after recuersion level: " << times << " is: " << std::endl;
+	printVector(this->mainV);
+	makePairs(depth-1, times+1);
+	binarySort(times);
+}
+
+void PmergeMe::binarySort(size_t times)
+{
+	times = 1;
+}
+
+int PmergeMe::nextJacobstahl(int current)
+{
+	int ret;
+	int old;
+	ret = 3;
+	old = 1;
+	while(ret <= current)
+	{
+		ret += (old*2);
+		old = ret-(old*2);
+	}
+	return ret;
 }
 
 const char * PmergeMe::InvalidInputException::what() const throw()

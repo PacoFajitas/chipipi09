@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:48:08 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/04/21 01:48:10 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/04/25 22:27:01 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@
 # include <algorithm>
 # include <iostream>
 # include <vector>
+# include <cmath> 
 
 class PmergeMe
 {
 private:
-	std::vector<std::vector<int> > data;
+	std::vector<int> mainV;
+	std::vector<int> pend;
 	int	depth;
 public:
 	class InvalidInputException : public std::exception
@@ -33,7 +35,9 @@ public:
 	PmergeMe(PmergeMe &old);
 	PmergeMe& operator=(PmergeMe& old);
 	~PmergeMe();
-	void	printVectorBase();
+	void makePairs(int depth, size_t times);
+	void binarySort(size_t times);
+	int nextJacobstahl(int current);
 };
 
 
