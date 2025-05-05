@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:48:08 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/03 20:09:26 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/05 12:12:27 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ public:
 	void 	initBounds(std::vector<int> tmpMain, std::vector<int> &bounds, int times);
 	void 	initTmpMain(std::vector<int> &tmpMain,std::vector<int> mainInd,std::vector<int> bounds);
 	int		findValinBounds(std::vector<int> bounds, int index);
+	void	binaryInsert(std::vector<int> &mainInd, std::vector<int> &tmpMain, std::vector<int> bounds,int bound, int indToPlace);
+	void	changeMainV(std::vector<int> tmpMain, int times);
 };
 
 

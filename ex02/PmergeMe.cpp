@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:49:38 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/05 10:21:02 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/05 13:08:45 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,18 +129,20 @@ void PmergeMe::makePairs(int depth, size_t times)
 void PmergeMe::binarySort(size_t times)
 {
 
-		std::cout << "holiiiiiiii" << std::endl;
+	std::cout << "holiiiiiiii" << std::endl;
 	std::vector<int> pend, pendInd, mainInd, tmpMain, bounds;
 	int jacobNum = nextJacobstahl(3);
 	int oldJacob = 1;
 	tmpMain = excludeUnpaired(this->mainV, times);
-	// printVector(tmpMain);
 	initMainAndPendInd(mainInd, tmpMain, times, pendInd);
-	// printVector(tmpMain);
 	initBounds(tmpMain, bounds, times);
+	std::cout << "LOS BOUNDS SON: ";
 	printVector(bounds);
-	initTmpMain(tmpMain, mainInd, bounds);
+	std::cout << "EN LA ITER: " <<  times << std::endl << "Y EL TMP MAIN ES: ";
 	printVector(tmpMain);
+	std::cout <<  "Y EL PEND ES: ";
+	printVector(pendInd);
+	initTmpMain(tmpMain, mainInd, bounds);
 	while (!pendInd.empty())
 	{
 		std::vector<int>::iterator pendIndIt = pendInd.begin();
@@ -150,21 +152,103 @@ void PmergeMe::binarySort(size_t times)
 			bound = -indToPlace -1;
 		else
 			bound = -indToPlace;
-		std::vector<int>::iterator tmpMainIt = tmpMain.begin();
-		for (std::vector<int>::iterator it = mainInd.begin(); *it != bound; ++it)
-		{
+		binaryInsert(mainInd, tmpMain, bounds, bound, indToPlace);
+		// printVector(tmpMain);
+		pendInd.erase(pendIndIt);
+		// printVector(pendInd);
+	}
+	printVector(tmpMain);
+	changeMainV(tmpMain, times);
+	std::cout << "adiu" << std::endl;
 	
-			if(findValinBounds(bounds, indToPlace) < findValinBounds(bounds, *it))
+
+}
+
+void	PmergeMe::changeMainV(std::vector<int> tmpMain, int times)
+{
+	int lastPair = std::pow(2, times)/2;
+	std::vector<int>::iterator it1 = tmpMain.begin();
+	std::vector<int>::iterator it2;
+	std::vector<int> fin;
+	printVector(tmpMain);
+	for (int t = 0; it1 != tmpMain.end(); ++it1)
+	{
+		it2 = this->mainV.begin();
+		while (*it2 != *it1)
+		{
+			++it2;
+			t++;
+		}
+		// std::cout << t << std::endl;
+		for (size_t i = lastPair-1; i > 0; i--)
+			fin.push_back(*(it2-i));
+		fin.push_back(*it2);
+	}
+	int excluded = this->mainV.size() %  lastPair;
+	while (excluded > 0)
+	{
+		int it;
+		std::vector<int>::iterator it2;
+		
+		it=*(mainV.end()-excluded);
+		it2 = fin.end();
+		fin.insert(it2, it);
+		excluded--;
+	}
+	// std::cout << "final: ";
+	// printVector(fin);
+	// std::cout << "Prev:";
+	// printVector(this->mainV);
+	this->mainV = fin;
+}
+void	PmergeMe::binaryInsert(std::vector<int> &mainInd,std::vector<int> &tmpMain,std::vector<int> bounds,int bound, int indToPlace)
+{
+	int	counter = 0;
+	std::vector<int>::iterator lowIt;
+	std::vector<int>::iterator highIt;
+	std::vector<int>::iterator tmpMainIt = tmpMain.begin();
+	lowIt = mainInd.begin();
+	highIt = std::find(mainInd.begin(), mainInd.end(), bound);
+	std::cout << "Intentando insertar : " << findValinBounds(bounds, indToPlace) <<  " con el indice: " << indToPlace << std::endl;;
+	while (1)
+	{
+		for (; lowIt != highIt; counter++)
+			++lowIt;
+		std::cout << counter << std::endl;
+		lowIt = mainInd.begin() + (counter/2);
+		if (findValinBounds(bounds, indToPlace) > findValinBounds(bounds, (*lowIt)))
+		{
+			if (lowIt+1==highIt)
 			{
-				mainInd.insert(it, indToPlace);
-				tmpMain.insert(tmpMainIt, findValinBounds(bounds, indToPlace));
+				// std::cout<< "VOY A INSERTAR: "<< findValinBounds(bounds, indToPlace) << " EN: " << findValinBounds(bounds, *highIt) << std::endl;
+				mainInd.insert(highIt, indToPlace);
+				for (int i = 0; i < (counter/2); i++)
+					++tmpMainIt;
+				tmpMain.insert(tmpMainIt+1, findValinBounds(bounds, indToPlace));
 				break;
 			}
-			++tmpMainIt;
 		}
-		printVector(tmpMain);
-		printVector(pendInd);
-		pendInd.erase(pendIndIt);
+		else
+		{
+			if (lowIt+1==highIt)
+			{
+				std::cout << indToPlace << std::endl;
+				if (lowIt == mainInd.begin())
+				{
+					highIt = lowIt;
+					tmpMainIt--;
+				}
+				std::cout<< "VOY A INSERTAR: "<< findValinBounds(bounds, indToPlace) << " EN: " << findValinBounds(bounds, *highIt) << std::endl;
+				mainInd.insert(highIt, indToPlace);
+				for (int i = 0; i < (counter/2); i++)
+					++tmpMainIt;
+				tmpMain.insert(tmpMainIt+1, findValinBounds(bounds, indToPlace));
+				break;				
+			}
+			highIt = lowIt;
+			lowIt = mainInd.begin();
+			counter = 0;	
+		}
 	}
 	
 	
@@ -218,13 +302,16 @@ int	PmergeMe::searchCurrIndex(std::vector<int>::iterator &pendIndIt, int &jacobN
 	int ret = 0;
 	while (!ret)
 	{
+		if(*pendIndIt == jacobNum)
+		{
+			ret = *pendIndIt;
+			break;
+		}
 		if (jacobNum == oldJacob)
 		{
 			jacobNum = nextJacobstahl(jacobNum);
 			oldJacob = jacobNum;
 		}
-		if(*pendIndIt == jacobNum)
-			ret = *pendIndIt;
 		jacobNum--;
 	}
 	return ret;
