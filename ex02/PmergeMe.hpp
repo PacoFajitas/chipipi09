@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:48:08 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/04/25 22:27:01 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/03 20:09:26 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,14 @@ public:
 	PmergeMe(PmergeMe &old);
 	PmergeMe& operator=(PmergeMe& old);
 	~PmergeMe();
-	void makePairs(int depth, size_t times);
-	void binarySort(size_t times);
-	int nextJacobstahl(int current);
+	void 	makePairs(int depth, size_t times);
+	void 	binarySort(size_t times);
+	int 	nextJacobstahl(int current);
+	void	initMainAndPendInd(std::vector<int> &mainInd, std::vector<int> tmpMain, int times, std::vector<int> &pendInd);
+	int		searchCurrIndex(std::vector<int>::iterator &pendIndIt, int &jacobNum, int &oldJacob);
+	void 	initBounds(std::vector<int> tmpMain, std::vector<int> &bounds, int times);
+	void 	initTmpMain(std::vector<int> &tmpMain,std::vector<int> mainInd,std::vector<int> bounds);
+	int		findValinBounds(std::vector<int> bounds, int index);
 };
 
 
