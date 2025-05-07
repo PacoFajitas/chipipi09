@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tfiguero <tfiguero@student.42barcelona.    +#+  +:+       +#+        */
+/*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:49:38 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/06 08:46:52 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:19:45 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,17 @@
 
 PmergeMe::PmergeMe()
 {
+}
+static void printVector(std::vector<int> vector)
+{
+	std::vector<int>::iterator it = vector.begin();
+	std::cout << "The values of this vector are: ";
+	while(it!= vector.end())
+	{
+		std::cout << *it << " ";
+		++it;
+	}
+	std::cout << std::endl;
 }
 
 static int ft_getdepth(int vals, int ret)
@@ -42,7 +53,7 @@ PmergeMe::PmergeMe(int argc, char **argv)
 	}
 	this->depth = ft_getdepth(mainV.size(), 0);
 	makePairs(this->depth, 1);
-	
+	printVector(this->mainV);
 }
 
 
@@ -59,17 +70,6 @@ PmergeMe & PmergeMe::operator=(PmergeMe & old)
 
 PmergeMe::~PmergeMe()
 {
-}
-static void printVector(std::vector<int> vector)
-{
-	std::vector<int>::iterator it = vector.begin();
-	std::cout << "The values of this vector are: ";
-	while(it!= vector.end())
-	{
-		std::cout << *it << " ";
-		++it;
-	}
-	std::cout << std::endl;
 }
 static std::vector<int> excludeUnpaired(std::vector<int> base, int times)
 {
@@ -123,7 +123,8 @@ void PmergeMe::makePairs(int depth, size_t times)
 	}
 	this->mainV = tmp;
 	makePairs(depth-1, times+1);
-	binarySort(times);
+	if(excludeUnpaired(this->mainV, times).size()/lastPair > 3)
+		binarySort(times);
 }
 
 void PmergeMe::binarySort(size_t times)
@@ -136,12 +137,7 @@ void PmergeMe::binarySort(size_t times)
 	tmpMain = excludeUnpaired(this->mainV, times);
 	initMainAndPendInd(mainInd, tmpMain, times, pendInd);
 	initBounds(tmpMain, bounds, times);
-	std::cout << "LOS BOUNDS SON: ";
-	printVector(bounds);
-	std::cout << "EN LA ITER: " <<  times << std::endl << "Y EL TMP MAIN ES: ";
-	printVector(tmpMain);
-	std::cout <<  "Y EL PEND ES: ";
-	printVector(pendInd);
+	printVector(mainInd);
 	initTmpMain(tmpMain, mainInd, bounds);
 	while (!pendInd.empty())
 	{
@@ -171,17 +167,18 @@ void	PmergeMe::changeMainV(std::vector<int> tmpMain, int times)
 	std::vector<int>::iterator it2;
 	std::vector<int> fin;
 	printVector(tmpMain);
-	for (int t = 0; it1 != tmpMain.end(); ++it1)
+	for (; it1 != tmpMain.end(); ++it1)
 	{
 		it2 = this->mainV.begin();
 		while (*it2 != *it1)
-		{
 			++it2;
-			t++;
-		}
 		// std::cout << t << std::endl;
 		for (size_t i = lastPair-1; i > 0; i--)
+		{
+			std::cout << "jiji" << std::endl;
 			fin.push_back(*(it2-i));
+		}
+		std::cout << *it2 << std::endl;
 		fin.push_back(*it2);
 	}
 	int excluded = this->mainV.size() %  lastPair;
@@ -195,9 +192,9 @@ void	PmergeMe::changeMainV(std::vector<int> tmpMain, int times)
 		fin.insert(it2, it);
 		excluded--;
 	}
-	// std::cout << "final: ";
+	std::cout << "final: ";
 	printVector(fin);
-	// std::cout << "Prev:";
+	std::cout << "Prev:";
 	printVector(this->mainV);
 	this->mainV = fin;
 }
@@ -265,6 +262,7 @@ void PmergeMe::initTmpMain(std::vector<int> &tmpMain,std::vector<int> mainInd,st
 		else
 			elem = (*it)*2;
 		std::vector<int>::iterator it2 = bounds.begin();
+		std::cout << *it << std::endl;
 		while(--elem>0)
 			++it2;
 		tmpMain.push_back(*it2);
