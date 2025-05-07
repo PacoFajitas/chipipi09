@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:49:38 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/07 17:19:45 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:03:47 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ PmergeMe::PmergeMe(int argc, char **argv)
 		mainV.push_back(std::atoi(argv[i]));
 	}
 	this->depth = ft_getdepth(mainV.size(), 0);
-	makePairs(this->depth, 1);
+	makePairsV(this->depth, 1);
 	printVector(this->mainV);
 }
 
@@ -71,7 +71,7 @@ PmergeMe & PmergeMe::operator=(PmergeMe & old)
 PmergeMe::~PmergeMe()
 {
 }
-static std::vector<int> excludeUnpaired(std::vector<int> base, int times)
+static std::vector<int> excludeUnpairedV(std::vector<int> base, int times)
 {
 	std::vector<int> ret;
 	int	pairs = pow(2, times)/2;
@@ -84,12 +84,12 @@ static std::vector<int> excludeUnpaired(std::vector<int> base, int times)
 	}
 	return ret;
 }
-void PmergeMe::makePairs(int depth, size_t times)
+void PmergeMe::makePairsV(int depth, size_t times)
 {
 	if (depth==0)
 		return ;	
 	std::vector<int> tmp;
-	tmp = excludeUnpaired(this->mainV, times);
+	tmp = excludeUnpairedV(this->mainV, times);
 	size_t pairs = pow(2, times);
 	size_t lastPair = pairs/2;
 	size_t i = lastPair-1;
@@ -122,42 +122,36 @@ void PmergeMe::makePairs(int depth, size_t times)
 		excluded--;
 	}
 	this->mainV = tmp;
-	makePairs(depth-1, times+1);
-	if(excludeUnpaired(this->mainV, times).size()/lastPair > 3)
-		binarySort(times);
+	makePairsV(depth-1, times+1);
+	if(excludeUnpairedV(this->mainV, times).size()/lastPair > 3)
+		binarySortV(times);
 }
 
-void PmergeMe::binarySort(size_t times)
+void PmergeMe::binarySortV(size_t times)
 {
 
-	std::cout << "holiiiiiiii" << std::endl;
 	std::vector<int> pend, pendInd, mainInd, tmpMain, bounds;
 	int jacobNum = nextJacobstahl(3);
 	int oldJacob = 1;
-	tmpMain = excludeUnpaired(this->mainV, times);
-	initMainAndPendInd(mainInd, tmpMain, times, pendInd);
-	initBounds(tmpMain, bounds, times);
+	tmpMain = excludeUnpairedV(this->mainV, times);
+	initMainAndPendIndV(mainInd, tmpMain, times, pendInd);
+	initBoundsV(tmpMain, bounds, times);
 	printVector(mainInd);
-	initTmpMain(tmpMain, mainInd, bounds);
+	initTmpMainV(tmpMain, mainInd, bounds);
 	while (!pendInd.empty())
 	{
 		std::vector<int>::iterator pendIndIt = pendInd.begin();
-		int indToPlace = searchCurrIndex(pendIndIt, jacobNum, oldJacob);
+		int indToPlace = searchCurrIndexV(pendIndIt, jacobNum, oldJacob);
 		int bound;
 		if(std::find(mainInd.begin(), mainInd.end(), -indToPlace) == mainInd.end())
 			bound = -indToPlace -1;
 		else
 			bound = -indToPlace;
-		binaryInsert(mainInd, tmpMain, bounds, bound, indToPlace);
-		// printVector(tmpMain);
+		binaryInsertV(mainInd, tmpMain, bounds, bound, indToPlace);
 		pendInd.erase(pendIndIt);
-		// printVector(pendInd);
 	}
 	printVector(tmpMain);
 	changeMainV(tmpMain, times);
-	std::cout << "adiu" << std::endl;
-	
-
 }
 
 void	PmergeMe::changeMainV(std::vector<int> tmpMain, int times)
@@ -172,13 +166,8 @@ void	PmergeMe::changeMainV(std::vector<int> tmpMain, int times)
 		it2 = this->mainV.begin();
 		while (*it2 != *it1)
 			++it2;
-		// std::cout << t << std::endl;
 		for (size_t i = lastPair-1; i > 0; i--)
-		{
-			std::cout << "jiji" << std::endl;
 			fin.push_back(*(it2-i));
-		}
-		std::cout << *it2 << std::endl;
 		fin.push_back(*it2);
 	}
 	int excluded = this->mainV.size() %  lastPair;
@@ -192,17 +181,12 @@ void	PmergeMe::changeMainV(std::vector<int> tmpMain, int times)
 		fin.insert(it2, it);
 		excluded--;
 	}
-	std::cout << "final: ";
-	printVector(fin);
-	std::cout << "Prev:";
-	printVector(this->mainV);
 	this->mainV = fin;
 }
 
-void PmergeMe::binaryInsert(std::vector<int> &mainInd, std::vector<int> &tmpMain, std::vector<int> bounds, int bound, int indToPlace)
+void PmergeMe::binaryInsertV(std::vector<int> &mainInd, std::vector<int> &tmpMain, std::vector<int> bounds, int bound, int indToPlace)
 {
-    int insertVal = findValinBounds(bounds, indToPlace);
-    // std::vector<int>::iterator lowIt = mainInd.begin();
+    int insertVal = findValinBoundsV(bounds, indToPlace);
     std::vector<int>::iterator highIt = std::find(mainInd.begin(), mainInd.end(), bound);
 
     int left = 0;
@@ -218,7 +202,7 @@ void PmergeMe::binaryInsert(std::vector<int> &mainInd, std::vector<int> &tmpMain
         for (int i = 0; i < mid; ++i)
             ++midIt;
 
-        int midVal = findValinBounds(bounds, *midIt);
+        int midVal = findValinBoundsV(bounds, *midIt);
         if (insertVal > midVal)
             left = mid + 1;
         else
@@ -237,7 +221,7 @@ void PmergeMe::binaryInsert(std::vector<int> &mainInd, std::vector<int> &tmpMain
     tmpMain.insert(tmpIt, insertVal);
 }
 
-int	PmergeMe::findValinBounds(std::vector<int> bounds, int index)
+int	PmergeMe::findValinBoundsV(std::vector<int> bounds, int index)
 {
 	int ret;
 	if(index < 0)
@@ -250,7 +234,7 @@ int	PmergeMe::findValinBounds(std::vector<int> bounds, int index)
 	ret = *it;
 	return ret;
 }
-void PmergeMe::initTmpMain(std::vector<int> &tmpMain,std::vector<int> mainInd,std::vector<int> bounds)
+void PmergeMe::initTmpMainV(std::vector<int> &tmpMain,std::vector<int> mainInd,std::vector<int> bounds)
 {
 	tmpMain.clear();
 	std::vector<int>::iterator it = mainInd.begin();
@@ -270,7 +254,7 @@ void PmergeMe::initTmpMain(std::vector<int> &tmpMain,std::vector<int> mainInd,st
 	}
 	
 }
-void PmergeMe::initBounds(std::vector<int> tmpMain, std::vector<int> &bounds, int times)
+void PmergeMe::initBoundsV(std::vector<int> tmpMain, std::vector<int> &bounds, int times)
 {
 	int pair = pow(2, times) /2;
 	size_t i = pair-1;
@@ -282,7 +266,7 @@ void PmergeMe::initBounds(std::vector<int> tmpMain, std::vector<int> &bounds, in
 
 }
 
-int	PmergeMe::searchCurrIndex(std::vector<int>::iterator &pendIndIt, int &jacobNum, int &oldJacob)
+int	PmergeMe::searchCurrIndexV(std::vector<int>::iterator &pendIndIt, int &jacobNum, int &oldJacob)
 {
 	int ret = 0;
 	while (!ret)
@@ -315,7 +299,7 @@ int PmergeMe::nextJacobstahl(int current)
 	return ret;
 }
 
-void PmergeMe::initMainAndPendInd(std::vector<int>& mainInd, std::vector<int> tmpMain, int times, std::vector<int>& pendInd)
+void PmergeMe::initMainAndPendIndV(std::vector<int>& mainInd, std::vector<int> tmpMain, int times, std::vector<int>& pendInd)
 {
 	float pair= pow(2, times)/2;
 	size_t num_elems = tmpMain.size()/pair;

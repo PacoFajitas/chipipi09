@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:02:48 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/07 17:16:46 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:07:20 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	main(int argc, char **argv)
 	try
 	{
 		PmergeMe(argc, argv);
+		// clock_t	init = clock();
 	}
 	catch(const std::exception& e)
 	{
