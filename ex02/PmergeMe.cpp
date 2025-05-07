@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
+/*   By: tfiguero <tfiguero@student.42barcelona.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:49:38 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/05 13:08:45 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/06 08:46:52 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,63 +196,50 @@ void	PmergeMe::changeMainV(std::vector<int> tmpMain, int times)
 		excluded--;
 	}
 	// std::cout << "final: ";
-	// printVector(fin);
+	printVector(fin);
 	// std::cout << "Prev:";
-	// printVector(this->mainV);
+	printVector(this->mainV);
 	this->mainV = fin;
 }
-void	PmergeMe::binaryInsert(std::vector<int> &mainInd,std::vector<int> &tmpMain,std::vector<int> bounds,int bound, int indToPlace)
+
+void PmergeMe::binaryInsert(std::vector<int> &mainInd, std::vector<int> &tmpMain, std::vector<int> bounds, int bound, int indToPlace)
 {
-	int	counter = 0;
-	std::vector<int>::iterator lowIt;
-	std::vector<int>::iterator highIt;
-	std::vector<int>::iterator tmpMainIt = tmpMain.begin();
-	lowIt = mainInd.begin();
-	highIt = std::find(mainInd.begin(), mainInd.end(), bound);
-	std::cout << "Intentando insertar : " << findValinBounds(bounds, indToPlace) <<  " con el indice: " << indToPlace << std::endl;;
-	while (1)
-	{
-		for (; lowIt != highIt; counter++)
-			++lowIt;
-		std::cout << counter << std::endl;
-		lowIt = mainInd.begin() + (counter/2);
-		if (findValinBounds(bounds, indToPlace) > findValinBounds(bounds, (*lowIt)))
-		{
-			if (lowIt+1==highIt)
-			{
-				// std::cout<< "VOY A INSERTAR: "<< findValinBounds(bounds, indToPlace) << " EN: " << findValinBounds(bounds, *highIt) << std::endl;
-				mainInd.insert(highIt, indToPlace);
-				for (int i = 0; i < (counter/2); i++)
-					++tmpMainIt;
-				tmpMain.insert(tmpMainIt+1, findValinBounds(bounds, indToPlace));
-				break;
-			}
-		}
-		else
-		{
-			if (lowIt+1==highIt)
-			{
-				std::cout << indToPlace << std::endl;
-				if (lowIt == mainInd.begin())
-				{
-					highIt = lowIt;
-					tmpMainIt--;
-				}
-				std::cout<< "VOY A INSERTAR: "<< findValinBounds(bounds, indToPlace) << " EN: " << findValinBounds(bounds, *highIt) << std::endl;
-				mainInd.insert(highIt, indToPlace);
-				for (int i = 0; i < (counter/2); i++)
-					++tmpMainIt;
-				tmpMain.insert(tmpMainIt+1, findValinBounds(bounds, indToPlace));
-				break;				
-			}
-			highIt = lowIt;
-			lowIt = mainInd.begin();
-			counter = 0;	
-		}
-	}
-	
-	
+    int insertVal = findValinBounds(bounds, indToPlace);
+    // std::vector<int>::iterator lowIt = mainInd.begin();
+    std::vector<int>::iterator highIt = std::find(mainInd.begin(), mainInd.end(), bound);
+
+    int left = 0;
+    int right = 0;
+    for (std::vector<int>::iterator it = mainInd.begin(); it != highIt; ++it)
+        ++right;
+
+    while (left < right)
+    {
+        int mid = left + (right - left) / 2;
+
+        std::vector<int>::iterator midIt = mainInd.begin();
+        for (int i = 0; i < mid; ++i)
+            ++midIt;
+
+        int midVal = findValinBounds(bounds, *midIt);
+        if (insertVal > midVal)
+            left = mid + 1;
+        else
+            right = mid;
+    }
+
+    std::vector<int>::iterator insertIt = mainInd.begin();
+    std::vector<int>::iterator tmpIt = tmpMain.begin();
+    for (int i = 0; i < left; ++i)
+    {
+        ++insertIt;
+        ++tmpIt;
+    }
+
+    mainInd.insert(insertIt, indToPlace);
+    tmpMain.insert(tmpIt, insertVal);
 }
+
 int	PmergeMe::findValinBounds(std::vector<int> bounds, int index)
 {
 	int ret;
