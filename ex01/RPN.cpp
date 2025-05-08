@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 14:43:00 by tfiguero          #+#    #+#             */
-/*   Updated: 2024/09/29 18:59:22 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/02 13:13:03 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void RPN::evaluate(std::string arg)
 {
 	for (size_t i = 0; i < arg.length(); i++)
 	{
+		
 		if (arg.at(i) == '+' ||arg.at(i) == '-'||arg.at(i) == '/'||arg.at(i) == '*' )
 			this->calculate(arg.at(i));
 		else if(arg.at(i) >= '0' && arg.at(i) <= '9')

@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:02:48 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/07 18:07:20 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:47:11 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,22 @@ int	main(int argc, char **argv)
 {
 	try
 	{
-		PmergeMe(argc, argv);
-		// clock_t	init = clock();
+		PmergeMe a(argc, argv);
+		clock_t	init = clock();
+		std::cout << "Before: " << std::endl;
+		a.printVector();
+		a.sortV();
+		std::cout << "After: " << std::endl;
+		a.printVector();
+		clock_t	end = clock();
+		double	vectorTime = ((end - init) / static_cast<double>(CLOCKS_PER_SEC)) * 1000;
+		init = clock();
+		a.sortD();
+		end = clock();
+		double	dequeTime = ((end - init) / static_cast<double>(CLOCKS_PER_SEC)) * 1000;
+		std::cout << "Time to process a range of " << argc - 1 << " elements with std::vector : " << vectorTime << " ms" << std::endl;
+		std::cout << "Time to process a range of " << argc - 1 << " elements with std::deque : " << dequeTime << " ms" << std::endl;
+		
 	}
 	catch(const std::exception& e)
 	{

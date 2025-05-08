@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 08:02:48 by tfiguero          #+#    #+#             */
-/*   Updated: 2024/09/29 19:00:28 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/02 13:15:50 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int argc, char **argv)
 		b = argv[1];
 		try
 		{
-		a.evaluate(b);
+			a.evaluate(b);
 		}
 		catch(const std::exception& e)
 		{

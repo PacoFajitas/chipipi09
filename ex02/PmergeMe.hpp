@@ -6,7 +6,7 @@
 /*   By: tfiguero < tfiguero@student.42barcelona    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 18:48:08 by tfiguero          #+#    #+#             */
-/*   Updated: 2025/05/07 18:01:15 by tfiguero         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:44:26 by tfiguero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,10 @@ public:
 	int		findValinBoundsD(std::deque<int> bounds, int index);
 	void	binaryInsertD(std::deque<int> &mainInd, std::deque<int> &tmpMain, std::deque<int> bounds,int bound, int indToPlace);
 	void	changeMainD(std::deque<int> tmpMain, int times);
+	void	printVector();
+	void	printDeque();
+	void	sortV();
+	void	sortD();
 };
 
 
